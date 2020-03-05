@@ -45,7 +45,7 @@ function makeHtmlBoard() {
   }
   htmlBoard.append(top);
 
-  // creates htmlBoard by iterativley creating cells, adding them to rows, 
+  // creates htmlBoard by iterativley creating cells, adding them to rows,
   // then adding the row to the board. Each cell has a "y-x" ID that refers to its
   // coordinate on the board.
   for (let y = 0; y < HEIGHT; y++) {
@@ -87,6 +87,7 @@ function placeInTable(y, x) {
 
 function endGame(msg) {
   // TODO: pop up alert message
+  alert(msg);
 }
 
 /** handleClick: handle click of column top to play piece */
@@ -109,7 +110,7 @@ function handleClick(evt) {
   } else {
     board[y][x] = 2;
   }
-  
+
 
   // check for win
   if (checkForWin()) {
@@ -117,11 +118,20 @@ function handleClick(evt) {
   }
 
   // check for tie
+  if (checkForTie()) {
+    return endGame('Tie Game!');
+  }
+
+
   // TODO: check if all cells in board are filled; if so call, call endGame
 
   // switch players
   currPlayer = currPlayer === 1 ? 2 : 1
 
+}
+
+function checkForTie() {
+  return board[0].every(x => x > 0);
 }
 
 /** checkForWin: check board cell-by-cell for "does a win start here?" */
