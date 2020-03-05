@@ -49,9 +49,9 @@ function makeHtmlBoard() {
   // then adding the row to the board. Each cell has a "y-x" ID that refers to its
   // coordinate on the board.
   for (let y = 0; y < HEIGHT; y++) {
-    const row = document.createElement("tr");
+    let row = document.createElement("tr");
     for (let x = 0; x < WIDTH; x++) {
-      const cell = document.createElement("td");
+      let cell = document.createElement("td");
       cell.setAttribute("id", `${y}-${x}`);
       row.append(cell);
     }
@@ -62,7 +62,6 @@ function makeHtmlBoard() {
 /** findSpotForCol: given column x, return top empty y (null if filled) */
 
 function findSpotForCol(x) {
-  // TODO: write the real version of this, rather than always returning 0
   for (y = HEIGHT-1; y > -1 ; y--) {
     if (board[y][x] === 0) {
       return y;
@@ -74,19 +73,17 @@ function findSpotForCol(x) {
 /** placeInTable: update DOM to place piece into HTML table of board */
 
 function placeInTable(y, x) {
-  // TODO: make a div and insert into correct table cell
   let piece = document.createElement("div");
   piece.classList.add("piece");
-  if (currPlayer === 1) piece.classList.add("p1");
-  if (currPlayer === 2) piece.classList.add("p2");
+  currPlayer === 1
+    ? piece.classList.add("p1")
+    : piece.classList.add("p2");
   document.getElementById(`${y}-${x}`).appendChild(piece);
-
 }
 
 /** endGame: announce game end */
 
 function endGame(msg) {
-  // TODO: pop up alert message
   alert(msg);
 }
 
@@ -94,16 +91,15 @@ function endGame(msg) {
 
 function handleClick(evt) {
   // get x from ID of clicked cell
-  var x = +evt.target.id;
+  let x = +evt.target.id;
 
   // get next spot in column (if none, ignore click)
-  var y = findSpotForCol(x);
+  let y = findSpotForCol(x);
   if (y === null) {
     return;
   }
 
   // place piece in board and add to HTML table
-  // TODO: add line to update in-memory board
   placeInTable(y, x);
   if (currPlayer === 1) {
     board[y][x] = 1;
@@ -121,9 +117,6 @@ function handleClick(evt) {
   if (checkForTie()) {
     return endGame('Tie Game!');
   }
-
-
-  // TODO: check if all cells in board are filled; if so call, call endGame
 
   // switch players
   currPlayer = currPlayer === 1 ? 2 : 1
@@ -154,12 +147,12 @@ function checkForWin() {
 
   // TODO: read and understand this code. Add comments to help you.
 
-  for (var y = 0; y < HEIGHT; y++) {
-    for (var x = 0; x < WIDTH; x++) {
-      var horiz = [[y, x], [y, x + 1], [y, x + 2], [y, x + 3]];
-      var vert = [[y, x], [y + 1, x], [y + 2, x], [y + 3, x]];
-      var diagDR = [[y, x], [y + 1, x + 1], [y + 2, x + 2], [y + 3, x + 3]];
-      var diagDL = [[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3]];
+  for (let y = 0; y < HEIGHT; y++) {
+    for (let x = 0; x < WIDTH; x++) {
+      let horiz = [[y, x], [y, x + 1], [y, x + 2], [y, x + 3]];
+      let vert = [[y, x], [y + 1, x], [y + 2, x], [y + 3, x]];
+      let diagDR = [[y, x], [y + 1, x + 1], [y + 2, x + 2], [y + 3, x + 3]];
+      let diagDL = [[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3]];
 
       if (_win(horiz) || _win(vert) || _win(diagDR) || _win(diagDL)) {
         return true;
