@@ -9,7 +9,8 @@ const WIDTH = 7;
 const HEIGHT = 6;
 
 let currPlayer = 1; // active player: 1 or 2
-const BOARD = []; // array of rows, each row is array of cells  (board[y][x])
+let board = []; // array of rows, each row is array of cells  (board[y][x])
+
 
 /** makeBoard: create in-JS board structure:
  *    board = array of rows, each row is array of cells  (board[y][x])
@@ -17,24 +18,21 @@ const BOARD = []; // array of rows, each row is array of cells  (board[y][x])
 
 function makeBoard() {
   // TODO: set "board" to empty HEIGHT x WIDTH matrix array, value of 0 for each cell
-  for (let i = 0; i < HEIGHT; i++) {
+  for (let y = 0; y < HEIGHT; y++) {
     let row = [];
-    for (let j = 0; j < WIDTH; j++) {
+    for (let x = 0; x < WIDTH; x++) {
       row.push(0);
     }
-    BOARD.push(row)
+    board.push(row)
   }
-  console.log(BOARD);
+  console.log(board);
 }
 
 /** makeHtmlBoard: make HTML table and row of column tops. */
 
 function makeHtmlBoard() {
-  // TODO: get "htmlBoard" variable from the item in HTML w/ID of "board"
-
   let htmlBoard = document.getElementById("board");
 
-  // TODO: add comment for this code
   //creates top row where each player will select the coloumn to place game piece
   let top = document.createElement("tr");
   top.setAttribute("id", "column-top");
@@ -47,10 +45,12 @@ function makeHtmlBoard() {
   }
   htmlBoard.append(top);
 
-  // creating htmlBoard
-  for (var y = 0; y < HEIGHT; y++) {
+  // creates htmlBoard by iterativley creating cells, adding them to rows, 
+  // then adding the row to the board. Each cell has a "y-x" ID that refers to its
+  // coordinate on the board.
+  for (let y = 0; y < HEIGHT; y++) {
     const row = document.createElement("tr");
-    for (var x = 0; x < WIDTH; x++) {
+    for (let x = 0; x < WIDTH; x++) {
       const cell = document.createElement("td");
       cell.setAttribute("id", `${y}-${x}`);
       row.append(cell);
@@ -63,13 +63,24 @@ function makeHtmlBoard() {
 
 function findSpotForCol(x) {
   // TODO: write the real version of this, rather than always returning 0
-  return 0;
+  for (y = HEIGHT-1; y > -1 ; y--) {
+    if (board[y][x] === 0) {
+      return y;
+    }
+  }
+  return null;
 }
 
 /** placeInTable: update DOM to place piece into HTML table of board */
 
 function placeInTable(y, x) {
   // TODO: make a div and insert into correct table cell
+  let piece = document.createElement("div");
+  piece.classList.add("piece");
+  if (currPlayer === 1) piece.classList.add("p1");
+  if (currPlayer === 2) piece.classList.add("p2");
+  document.getElementById(`${y}-${x}`).appendChild(piece);
+
 }
 
 /** endGame: announce game end */
@@ -93,6 +104,12 @@ function handleClick(evt) {
   // place piece in board and add to HTML table
   // TODO: add line to update in-memory board
   placeInTable(y, x);
+  if (currPlayer === 1) {
+    board[y][x] = 1;
+  } else {
+    board[y][x] = 2;
+  }
+  
 
   // check for win
   if (checkForWin()) {
@@ -103,7 +120,8 @@ function handleClick(evt) {
   // TODO: check if all cells in board are filled; if so call, call endGame
 
   // switch players
-  // TODO: switch currPlayer 1 <-> 2
+  currPlayer = currPlayer === 1 ? 2 : 1
+
 }
 
 /** checkForWin: check board cell-by-cell for "does a win start here?" */
