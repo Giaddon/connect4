@@ -132,7 +132,7 @@ function checkForTie() {
 function checkForWin() {
   function _win(cells) {
     // Check four cells to see if they're all color of current player
-    //  - cells: list of four (y, x) cells
+    //  - cells: list of four (y, x) cells (comes from checkForWin -- see below)
     //  - returns true if all are legal coordinates & all match currPlayer
 
     return cells.every(
@@ -145,15 +145,16 @@ function checkForWin() {
     );
   }
 
-  // TODO: read and understand this code. Add comments to help you.
-
+  // Loop through each row
   for (let y = 0; y < HEIGHT; y++) {
+    // Loop through each cell of row
     for (let x = 0; x < WIDTH; x++) {
+      // Each of these variables is an array of four consectutive cells from position y,x 
       let horiz = [[y, x], [y, x + 1], [y, x + 2], [y, x + 3]];
       let vert = [[y, x], [y + 1, x], [y + 2, x], [y + 3, x]];
       let diagDR = [[y, x], [y + 1, x + 1], [y + 2, x + 2], [y + 3, x + 3]];
       let diagDL = [[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3]];
-
+      // Check that each variable is inside the game board and owned by the same player
       if (_win(horiz) || _win(vert) || _win(diagDR) || _win(diagDL)) {
         return true;
       }
